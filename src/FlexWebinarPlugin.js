@@ -1,9 +1,9 @@
-import React from 'react';
-import { FlexPlugin } from 'flex-plugin';
+import React from "react";
+import { FlexPlugin } from "flex-plugin";
 
 import theme from "./myTheme";
 
-const PLUGIN_NAME = 'FlexWebinarPlugin';
+const PLUGIN_NAME = "FlexWebinarPlugin";
 
 export default class FlexWebinarPlugin extends FlexPlugin {
   constructor() {
@@ -18,7 +18,13 @@ export default class FlexWebinarPlugin extends FlexPlugin {
    * @param manager { import('@twilio/flex-ui').Manager }
    */
   init(flex, manager) {
-    flex.MainHeader.defaultProps.logoUrl = "https://tangerine-toad-5117.twil.io/assets/feathercorp-logo-white.svg";
+    flex.MainHeader.defaultProps.logoUrl =
+      "https://tangerine-toad-5117.twil.io/assets/feathercorp-logo-white.svg";
     manager.updateConfig({ colorTheme: theme });
+
+    manager.workerClient.on("reservationCreated", async (reservation) => {
+      await flex.Actions.invokeAction("AcceptTask", { sid: reservation.sid });
+      await flex.Actions.invokeAction("SelectTask", { sid: reservation.sid });
+    });
   }
 }
