@@ -1,6 +1,8 @@
 import React from 'react';
 import { FlexPlugin } from 'flex-plugin';
 
+import theme from "./myTheme";
+
 const PLUGIN_NAME = 'FlexWebinarPlugin';
 
 export default class FlexWebinarPlugin extends FlexPlugin {
@@ -16,5 +18,7 @@ export default class FlexWebinarPlugin extends FlexPlugin {
    * @param manager { import('@twilio/flex-ui').Manager }
    */
   init(flex, manager) {
+    flex.MainHeader.defaultProps.logoUrl = "https://tangerine-toad-5117.twil.io/assets/feathercorp-logo-white.svg";
+    manager.updateConfig({ colorTheme: theme });
   }
 }
