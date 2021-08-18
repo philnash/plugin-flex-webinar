@@ -21,13 +21,22 @@ export default class FlexWebinarPlugin extends FlexPlugin {
   init(flex, manager) {
     // Branding and theming
     flex.MainHeader.defaultProps.logoUrl =
-      "https://tangerine-toad-5117.twil.io/assets/feathercorp-logo-white.svg";
+      "https://earthy-development-1769.twil.io/logo.png";
     manager.updateConfig({ colorTheme: theme });
 
     // Actions Framework
+    // When a reservation is created, immediately accept the reservation
     manager.workerClient.on("reservationCreated", async (reservation) => {
       await flex.Actions.invokeAction("AcceptTask", { sid: reservation.sid });
       await flex.Actions.invokeAction("SelectTask", { sid: reservation.sid });
+    });
+
+    // When hanging up on a call, complete the task after a timeout
+    flex.Actions.addListener("afterHangupCall", (payload) => {
+      console.log("MY AFTER HANGUP CALL", payload);
+      setTimeout(() => {
+        flex.Actions.invokeAction("CompleteTask", { sid: payload.task.sid });
+      }, 5000);
     });
 
     // Adding React Components and setting attributes on tasks
@@ -37,12 +46,12 @@ export default class FlexWebinarPlugin extends FlexPlugin {
     );
 
     // Integrating a CRM
-    flex.CRMContainer.defaultProps.uriCallback = (task) => {
-      if (task && task.attributes.crmid) {
-        return `https://app.hubspot.com/contacts/20105123/contacts/${task.attributes.crmid}`;
-      } else {
-        return "https://app.hubspot.com/contacts/20105123/contacts/list/view/all/";
-      }
-    };
+    // flex.CRMContainer.defaultProps.uriCallback = (task) => {
+    //   if (task && task.attributes.crmid) {
+    //     return `https://app.hubspot.com/contacts/20105123/contacts/${task.attributes.crmid}`;
+    //   } else {
+    //     return "https://app.hubspot.com/contacts/20105123/contacts/list/view/all/";
+    //   }
+    // };
   }
 }
