@@ -1,6 +1,5 @@
 import React from "react";
 import { FlexPlugin } from "flex-plugin";
-
 import theme from "./myTheme";
 import CustomerName from "./components/CustomerName";
 
@@ -33,7 +32,6 @@ export default class FlexWebinarPlugin extends FlexPlugin {
 
     // When hanging up on a call, complete the task after a timeout
     flex.Actions.addListener("afterHangupCall", (payload) => {
-      console.log("MY AFTER HANGUP CALL", payload);
       setTimeout(() => {
         flex.Actions.invokeAction("CompleteTask", { sid: payload.task.sid });
       }, 5000);
@@ -44,14 +42,5 @@ export default class FlexWebinarPlugin extends FlexPlugin {
       <CustomerName key="customer-name"></CustomerName>,
       { sortOrder: -1 }
     );
-
-    // Integrating a CRM
-    // flex.CRMContainer.defaultProps.uriCallback = (task) => {
-    //   if (task && task.attributes.crmid) {
-    //     return `https://app.hubspot.com/contacts/20105123/contacts/${task.attributes.crmid}`;
-    //   } else {
-    //     return "https://app.hubspot.com/contacts/20105123/contacts/list/view/all/";
-    //   }
-    // };
   }
 }
